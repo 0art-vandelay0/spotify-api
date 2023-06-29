@@ -1,12 +1,21 @@
 export default class Spotify {
-
-    static async getArtist(artist) {
+    static async getCategory() {
         try {
-            const response = await fetch(`https://api.spotify.com/v1/search?q=${artist}&type=artist&limit=1`);
+            const response = await fetch(`https://api.spotify.com/v1/browse/categories`, {
+                headers: {
+                    'Authorization': `Bearer ${process.env.API_KEY}}`
+                }
+            });
+            const jsonifiedResponse = await response.json();
+            console.log(jsonifiedResponse);
             if (!response.ok) {
-                throw Error(response.statusText);
+                const errorMessage = `${response.status} (${response.statusText})`;
+                throw new Error(errorMessage);
             }
-            return response.json();
+            return jsonifiedResponse;
+        } catch (error) {
+            return error;
         }
-
     }
+    
+}
